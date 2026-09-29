@@ -1,11 +1,14 @@
 # Data Warehouse and Analytics Project
+
+Welcome to the **Data Warehouse and Analytics Project** repository! 🚀
+This project demonstrates a comprehensive data warehousing and analytics solution, from building a data warehouse to generating actionable insights.
+
 ---
-Welcome to the **Data Warehouse and Analytics Project** repository! 🚀  
-This project demonstrates a comprehensive data warehousing and analytics solution, from building a data warehouse to generating actionable insights. 
----
+
 ## 🏗️ Data Architecture
 
 The data architecture for this project follows Medallion Architecture **Bronze**, **Silver**, and **Gold** layers:
+
 ![Project Architecture](https://github.com/Tusneld/data_warehouse/blob/ebeb2c6309f1e77e49528dee5c1c07284481c509/Architecture.JPG)
 
 1. **Bronze Layer**: Stores raw data as-is from the source systems. Data is ingested from CSV Files into SQL Server Database.
@@ -13,6 +16,7 @@ The data architecture for this project follows Medallion Architecture **Bronze**
 3. **Gold Layer**: Houses business-ready data modeled into a star schema required for reporting and analytics.
 
 ---
+
 ## 📖 Project Overview
 
 This project involves:
@@ -21,7 +25,7 @@ This project involves:
 2. **ETL Pipelines**: Extracting, transforming, and loading data from source systems into the warehouse.
 3. **Data Modeling**: Developing fact and dimension tables optimized for analytical queries.
 4. **Analytics & Reporting**: Creating SQL-based reports and dashboards for actionable insights.
-   
+
 ---
 
 ## 🚀 Project Requirements
@@ -29,9 +33,11 @@ This project involves:
 ### Building the Data Warehouse (Data Engineering)
 
 #### Objective
+
 Develop a modern data warehouse using SQL Server to consolidate sales data, enabling analytical reporting and informed decision-making.
 
 #### Specifications
+
 - **Data Sources**: Import data from two source systems (ERP and CRM) provided as CSV files.
 - **Data Quality**: Cleanse and resolve data quality issues prior to analysis.
 - **Integration**: Combine both sources into a single, user-friendly data model designed for analytical queries.
@@ -43,16 +49,21 @@ Develop a modern data warehouse using SQL Server to consolidate sales data, enab
 ### BI: Analytics & Reporting (Data Analysis)
 
 #### Objective
+
 Develop SQL-based analytics to deliver detailed insights into:
+
 - **Customer Behavior**
 - **Product Performance**
 - **Sales Trends**
 
-These insights empower stakeholders with key business metrics, enabling strategic decision-making.  
+These insights empower stakeholders with key business metrics, enabling strategic decision-making.
 
-For more details, refer to [docs/requirements.md]).
+For more details, refer to [docs/requirements.md].
+
+---
 
 ## 📂 Repository Structure
+
 ```
 data-warehouse-project/
 │
@@ -78,6 +89,7 @@ data-warehouse-project/
 ├── .gitignore                          # Files and directories to be ignored by Git
 └── requirements.txt                    # Dependencies and requirements for the project
 ```
+
 ---
 
 ## ☕ Stay Connected
