@@ -28,6 +28,7 @@ Execution Example:
     EXEC silver.load_silver;
 ===============================================================================
 */
+EXEC silver.load_silver
 
 CREATE OR ALTER PROCEDURE silver.load_silver AS
 BEGIN
