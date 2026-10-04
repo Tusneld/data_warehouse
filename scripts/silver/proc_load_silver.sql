@@ -1,20 +1,31 @@
 /*
 ===============================================================================
-Stored Procedure: Load Silver Layer (Bronze -> Silver)
-===============================================================================
-Script Purpose:
-    This stored procedure performs the ETL (Extract, Transform, Load) process to 
-    populate the 'silver' schema tables from the 'bronze' schema.
-	Actions Performed:
-		- Truncates Silver tables.
-		- Inserts transformed and cleansed data from Bronze into Silver tables.
-		
-Parameters:
-    None. 
-	  This stored procedure does not accept any parameters or return any values.
+Stored Procedure: silver.load_silver
+Purpose:
+    Rebuilds the Silver layer by extracting data from the Bronze layer, applying
+    data-quality and normalization rules, and loading curated, business-ready
+    tables for downstream reporting and analytics.
 
-Usage Example:
-    EXEC Silver.load_silver;
+What this procedure does:
+    - Truncates existing Silver tables before reload
+    - Deduplicates historical records where required
+    - Standardizes codes and values (e.g., gender, marital status, product line)
+    - Cleans and converts raw date fields into valid SQL dates
+    - Normalizes identifiers and business keys
+    - Recalculates derived metrics such as sales and pricing when source values
+      are missing or inconsistent
+
+Scope:
+    This procedure loads both CRM and ERP Silver tables from their corresponding
+    Bronze-stage sources.
+
+Notes:
+    - The procedure is designed as a full refresh of the Silver layer.
+    - It is intended for controlled ETL runs and includes logging for each table
+      load and a TRY/CATCH error handler for operational visibility.
+
+Execution Example:
+    EXEC silver.load_silver;
 ===============================================================================
 */
 
@@ -54,12 +65,12 @@ BEGIN
 				WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
 				WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married'
 				ELSE 'n/a'
-			END AS cst_marital_status, -- Normalize marital status values to readable format
+			END AS cst_marital_status, -- Standardize marital status to a consistent business-friendly value set
 			CASE 
 				WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
 				WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
 				ELSE 'n/a'
-			END AS cst_gndr, -- Normalize gender values to readable format
+			END AS cst_gndr, -- Map gender source codes to canonical silver-layer values
 			cst_create_date
 		FROM (
 			SELECT
@@ -111,7 +122,7 @@ BEGIN
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 
-        -- Loading crm_sales_details
+        -- Loading silver.crm_sales_details
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.crm_sales_details';
 		TRUNCATE TABLE silver.crm_sales_details;
@@ -147,19 +158,19 @@ BEGIN
 				WHEN sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * ABS(sls_price) 
 					THEN sls_quantity * ABS(sls_price)
 				ELSE sls_sales
-			END AS sls_sales, -- Recalculate sales if original value is missing or incorrect
+			END AS sls_sales, -- Recalculate sales when the source value is missing, inconsistent, or invalid
 			sls_quantity,
 			CASE 
 				WHEN sls_price IS NULL OR sls_price <= 0 
 					THEN sls_sales / NULLIF(sls_quantity, 0)
-				ELSE sls_price  -- Derive price if original value is invalid
+				ELSE sls_price  -- Derive unit price when the source price is null or non-positive
 			END AS sls_price
 		FROM bronze.crm_sales_details;
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 
-        -- Loading erp_cust_az12
+        -- Loading silver.erp_cust_az12
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.erp_cust_az12';
 		TRUNCATE TABLE silver.erp_cust_az12;
@@ -192,7 +203,7 @@ BEGIN
 		PRINT 'Loading ERP Tables';
 		PRINT '------------------------------------------------';
 
-        -- Loading erp_loc_a101
+        -- Loading silver.erp_loc_a101
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.erp_loc_a101';
 		TRUNCATE TABLE silver.erp_loc_a101;
@@ -208,13 +219,13 @@ BEGIN
 				WHEN TRIM(cntry) IN ('US', 'USA') THEN 'United States'
 				WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'n/a'
 				ELSE TRIM(cntry)
-			END AS cntry -- Normalize and Handle missing or blank country codes
+			END AS cntry -- Normalize and handle missing or blank country codes
 		FROM bronze.erp_loc_a101;
 	    SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 		
-		-- Loading erp_px_cat_g1v2
+		-- Loading silver.erp_px_cat_g1v2
 		SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.erp_px_cat_g1v2';
 		TRUNCATE TABLE silver.erp_px_cat_g1v2;
@@ -244,10 +255,10 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		PRINT '=========================================='
-		PRINT 'ERROR OCCURED DURING LOADING BRONZE LAYER'
-		PRINT 'Error Message' + ERROR_MESSAGE();
-		PRINT 'Error Message' + CAST (ERROR_NUMBER() AS NVARCHAR);
-		PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR);
+		PRINT 'ERROR OCCURRED DURING SILVER LAYER LOAD'
+		PRINT 'Error Message: ' + ERROR_MESSAGE();
+		PRINT 'Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR);
+		PRINT 'Error State: ' + CAST(ERROR_STATE() AS NVARCHAR);
 		PRINT '=========================================='
 	END CATCH
 END
