@@ -86,6 +86,7 @@ The final **Gold layer** enables fast, accurate reporting on **Customer Behavior
 ## How to Run This Project
 
 ### Prerequisites
+
 - Microsoft SQL Server (2019 or later recommended)
 - SQL Server Management Studio (SSMS) or Azure Data Studio
 - Basic understanding of T-SQL
@@ -93,25 +94,31 @@ The final **Gold layer** enables fast, accurate reporting on **Customer Behavior
 ### Steps
 
 1. **Clone the repository**
-   ```bash
+
+```bash
    git clone https://github.com/Tusneld/data_warehouse.git
    cd data_warehouse
 ```
-Create a new database in SQL Server (e.g. DataWarehouse)
-Run the scripts in order:
-First run all scripts in scripts/bronze/
-Then run all scripts in scripts/silver/
-Finally run all scripts in scripts/gold/
 
-Validate the results
-Check that Bronze tables contain the raw data
-Verify Silver tables are cleaned and standardized
-Confirm Gold layer contains the Star Schema (dimensions + facts)
+2. **Create a new database** in SQL Server (e.g., `DataWarehouse`).
 
-Optional: Connect the Gold layer to Power BI or any BI tool for visualization.
+3. **Run the scripts in order:**
+   - First, run all scripts in `scripts/bronze/`
+   - Then, run all scripts in `scripts/silver/`
+   - Finally, run all scripts in `scripts/gold/`
+
+4. **Validate the results:**
+   - Check that Bronze tables contain the raw data
+   - Verify that Silver tables are cleaned and standardized
+   - Confirm that the Gold layer contains the Star Schema (dimensions + facts)
+
+5. **Optional:** Connect the Gold layer to Power BI or any other BI tool for visualization.
 
 ---
 
+## Project Structure
+
+```text
 data-warehouse-project/
 │
 ├── datasets/               # Raw ERP and CRM source files
@@ -123,14 +130,18 @@ data-warehouse-project/
 ├── tests/                  # Data quality and validation tests
 ├── README.md
 └── LICENSE
+```
+
 ---
 
 ## Key Outcomes
 
-Established a single source of truth for sales and customer data
-Significantly improved data quality and reliability
-Enabled faster and more accurate business reporting
-Created a scalable foundation ready for BI tools (Power BI, Tableau, etc.)
+- Established a single source of truth for sales and customer data
+- Significantly improved data quality and reliability
+- Enabled faster and more accurate business reporting
+- Created a scalable foundation ready for BI tools (Power BI, Tableau, etc.)
+
+---
 
 ## ☕ Stay Connected
 
