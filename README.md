@@ -1,96 +1,136 @@
-# Data Warehouse and Analytics Project
+# Modern Data Warehouse & Analytics Project
 
-Welcome to the **Data Warehouse and Analytics Project** repository! 🚀
-This project demonstrates a comprehensive data warehousing and analytics solution, from building a data warehouse to generating actionable insights.
+![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
+![T-SQL](https://img.shields.io/badge/T--SQL-000000?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
+![Data Engineering](https://img.shields.io/badge/Data%20Engineering-0A66C2?style=for-the-badge)
+![ETL](https://img.shields.io/badge/ETL-FF6F00?style=for-the-badge)
+![Star Schema](https://img.shields.io/badge/Star%20Schema-4CAF50?style=for-the-badge)
+![Medallion Architecture](https://img.shields.io/badge/Medallion%20Architecture-Bronze%20%7C%20Silver%20%7C%20Gold-9C27B0?style=for-the-badge)
+
+> Building a scalable data warehouse from fragmented ERP & CRM sources using Medallion Architecture - delivering clean, reliable insights for business decision-making.
+
+This project showcases end-to-end **Data Engineering** and **Analytics** skills by transforming messy operational data into a production-ready analytical platform.
 
 ---
 
-## 🏗️ Data Architecture
+## Business Problem
 
-The data architecture for this project follows Medallion Architecture **Bronze**, **Silver**, and **Gold** layers:
+A company operates with two disconnected source systems:
+
+- **ERP System** → Handles sales, products, and inventory  
+- **CRM System** → Manages customer and relationship data
+
+This fragmentation created several critical issues:
+
+- No single source of truth for sales and customer data  
+- Inconsistent and poor-quality data (duplicates, nulls, mismatched formats)  
+- Slow and unreliable reporting  
+- Difficulty answering key business questions such as:  
+  - Who are our most valuable customers?  
+  - Which products drive the highest revenue?  
+  - What are the current sales trends?
+
+Stakeholders lacked trusted, timely insights needed for strategic decisions.
+
+---
+
+## Solution Overview
+
+I designed and implemented a **Modern Data Warehouse** using the **Medallion Architecture** (Bronze → Silver → Gold) in SQL Server.
+
+| Layer     | Purpose                                      | Outcome                          |
+|-----------|----------------------------------------------|----------------------------------|
+| **Bronze**   | Raw data ingestion from ERP & CRM CSV files | Source data preserved as-is     |
+| **Silver**   | Data cleansing, standardization & integration | Clean, consistent, unified data |
+| **Gold**     | Star Schema modeling for analytics           | Business-ready analytical model |
+
+The final **Gold layer** enables fast, accurate reporting on **Customer Behavior**, **Product Performance**, and **Sales Trends**.
+
+---
+
+## Project Highlights
+
+- Designed a complete **Medallion Architecture** data pipeline  
+- Built robust **ETL processes** using T-SQL  
+- Resolved data quality issues (duplicates, nulls, inconsistent naming)  
+- Created a clean **Star Schema** optimized for analytical queries  
+- Developed SQL-based analytics and insights  
+- Applied professional **naming conventions** and documentation standards  
+
+---
+
+## Tech Stack
+
+| Category              | Tools / Technologies                  |
+|-----------------------|---------------------------------------|
+| Database              | Microsoft SQL Server                  |
+| Language              | T-SQL                                 |
+| Architecture          | Medallion Architecture (Bronze-Silver-Gold) |
+| Data Modeling         | Star Schema (Fact & Dimension tables) |
+| Data Integration      | ETL Pipelines                         |
+| Source Systems        | ERP & CRM (CSV files)                 |
+| Documentation         | Markdown, Draw.io                     |
+
+---
+
+## Architecture
 
 ![Project Architecture](https://github.com/Tusneld/data_warehouse/blob/ebeb2c6309f1e77e49528dee5c1c07284481c509/Architecture.JPG)
 
-1. **Bronze Layer**: Stores raw data as-is from the source systems. Data is ingested from CSV Files into SQL Server Database.
-2. **Silver Layer**: This layer includes data cleansing, standardization, and normalization processes to prepare data for analysis.
-3. **Gold Layer**: Houses business-ready data modeled into a star schema required for reporting and analytics.
+1. **Bronze Layer** - Stores raw data exactly as received from source systems.  
+2. **Silver Layer** - Performs data cleansing, standardization, and normalization.  
+3. **Gold Layer** - Delivers a business-ready Star Schema for reporting and analytics.
 
 ---
 
-## 📖 Project Overview
+## How to Run This Project
 
-This project involves:
+### Prerequisites
+- Microsoft SQL Server (2019 or later recommended)
+- SQL Server Management Studio (SSMS) or Azure Data Studio
+- Basic understanding of T-SQL
 
-1. **Data Architecture**: Designing a Modern Data Warehouse Using Medallion Architecture **Bronze**, **Silver**, and **Gold** layers.
-2. **ETL Pipelines**: Extracting, transforming, and loading data from source systems into the warehouse.
-3. **Data Modeling**: Developing fact and dimension tables optimized for analytical queries.
-4. **Analytics & Reporting**: Creating SQL-based reports and dashboards for actionable insights.
+### Steps
 
----
-
-## 🚀 Project Requirements
-
-### Building the Data Warehouse (Data Engineering)
-
-#### Objective
-
-Develop a modern data warehouse using SQL Server to consolidate sales data, enabling analytical reporting and informed decision-making.
-
-#### Specifications
-
-- **Data Sources**: Import data from two source systems (ERP and CRM) provided as CSV files.
-- **Data Quality**: Cleanse and resolve data quality issues prior to analysis.
-- **Integration**: Combine both sources into a single, user-friendly data model designed for analytical queries.
-- **Scope**: Focus on the latest dataset only; historization of data is not required.
-- **Documentation**: Provide clear documentation of the data model to support both business stakeholders and analytics teams.
-
----
-
-### BI: Analytics & Reporting (Data Analysis)
-
-#### Objective
-
-Develop SQL-based analytics to deliver detailed insights into:
-
-- **Customer Behavior**
-- **Product Performance**
-- **Sales Trends**
-
-These insights empower stakeholders with key business metrics, enabling strategic decision-making.
-
-For more details, refer to [docs/requirements.md].
-
----
-
-## 📂 Repository Structure
-
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Tusneld/data_warehouse.git
+   cd data_warehouse
 ```
+Create a new database in SQL Server (e.g. DataWarehouse)
+Run the scripts in order:
+First run all scripts in scripts/bronze/
+Then run all scripts in scripts/silver/
+Finally run all scripts in scripts/gold/
+
+Validate the results
+Check that Bronze tables contain the raw data
+Verify Silver tables are cleaned and standardized
+Confirm Gold layer contains the Star Schema (dimensions + facts)
+
+Optional: Connect the Gold layer to Power BI or any BI tool for visualization.
+
+---
+
 data-warehouse-project/
 │
-├── datasets/                           # Raw datasets used for the project (ERP and CRM data)
-│
-├── docs/                               # Project documentation and architecture details
-│   ├── etl.drawio                      # Draw.io file shows all different techniquies and methods of ETL
-│   ├── data_architecture.drawio        # Draw.io file shows the project's architecture
-│   ├── data_catalog.md                 # Catalog of datasets, including field descriptions and metadata
-│   ├── data_flow.drawio                # Draw.io file for the data flow diagram
-│   ├── data_models.drawio              # Draw.io file for data models (star schema)
-│   ├── naming-conventions.md           # Consistent naming guidelines for tables, columns, and files
-│
-├── scripts/                            # SQL scripts for ETL and transformations
-│   ├── bronze/                         # Scripts for extracting and loading raw data
-│   ├── silver/                         # Scripts for cleaning and transforming data
-│   ├── gold/                           # Scripts for creating analytical models
-│
-├── tests/                              # Test scripts and quality files
-│
-├── README.md                           # Project overview and instructions
-├── LICENSE                             # License information for the repository
-├── .gitignore                          # Files and directories to be ignored by Git
-└── requirements.txt                    # Dependencies and requirements for the project
-```
-
+├── datasets/               # Raw ERP and CRM source files
+├── docs/                   # Architecture diagrams, data catalog, naming conventions
+├── scripts/
+│   ├── bronze/             # Raw data loading scripts
+│   ├── silver/             # Data cleaning & transformation scripts
+│   └── gold/               # Star Schema and analytical models
+├── tests/                  # Data quality and validation tests
+├── README.md
+└── LICENSE
 ---
+
+## Key Outcomes
+
+Established a single source of truth for sales and customer data
+Significantly improved data quality and reliability
+Enabled faster and more accurate business reporting
+Created a scalable foundation ready for BI tools (Power BI, Tableau, etc.)
 
 ## ☕ Stay Connected
 
